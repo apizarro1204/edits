@@ -1,0 +1,31 @@
+{
+  "name": "clase-17",
+  "version": "1.0.0",
+  "description": "clase17",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "knex": "^2.3.0",
+    "mysql": "^2.18.1",
+    "socket.io": "^4.5.3",
+    "sqlite3": "^5.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apizarro1204/Clase-17.git"
+  },
+  "bugs": {
+    "url": "https://github.com/apizarro1204/Clase-17/issues"
+  },
+  "homepage": "https://github.com/apizarro1204/Clase-17#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.14"
+  }
+}
