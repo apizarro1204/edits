@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href=https://bootswatch.com/5/solar/bootstrap.min.css>
+    <link rel="shortcut icon" href="#">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+                <div class="card text-white bg-secondary m-3" style="height: 80%;">
+                    <div class="card-header">User login</div>
+                    <div class="card-body">
+                        <h4 class="card-title">Enter your username</h4>
+                        <div class="row">
+                            <form action="/login" method="post" id="idFormLogin">
+                                <div class="form-group col-10">
+                                    <label for="username">Username</label>
+                                    <input id="username" class="form-control" type="text" name="username" required>
+                                </div>
+                                <button class="btn btn-success mt-3" id="idBtnLoginSubmit">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

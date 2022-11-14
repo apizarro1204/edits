@@ -7,7 +7,7 @@ export default {
     },
     mongoRemote: {
         cliente: 'mongodb',
-        cnxStr: 'mongodb+srv://Apizarro:darbeta12@cluster0.ho8uwm4.mongodb.net/?retryWrites=true&w=majority'
+        cxnStr: 'mongodb+srv://Apizarro:darbeta12@cluster0.ho8uwm4.mongodb.net/?retryWrites=true&w=majority'
     },
     mysql: {
         client: "mysql",
@@ -27,5 +27,3 @@ export default {
         useNullAsDefault: true
     }
 }
-
-
