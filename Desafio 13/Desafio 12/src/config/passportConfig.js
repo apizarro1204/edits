@@ -1,14 +1,20 @@
-import bCrypt from "bcrypt";
+import express from "express";
 import { createHash } from "crypto";
 import mongoose from "mongoose";
-import passport from "passport";
-import { Strategy } from "passport";
 import UserModel from "./../models/userSchema.js"
 import { createHash, isValidPassword } from "./bCryptPass.js";
 
+import passport from "passport";
+import { Strategy } from "passport-local";
+
+
+const localStrategy = Strategy;
+
+
 
 passport.use("register", new localStrategy(
-    { passReqToCallback: true },
+    { passReqToCallback: true},
+    console.log("registrado"),
     async (req, username, password, done) => {
         console.log("User Registred has", username + " " + password);
         mongoose.connect(process.env.DB_MONGO);
@@ -28,6 +34,7 @@ passport.use("register", new localStrategy(
                     return done(null, userWithId);
                 }
             );
+            console.log("Este try de register")
         } catch (error) {
             console.warning({ error: 'Usuario ya existe' })
             return done(error, null);
@@ -35,7 +42,7 @@ passport.use("register", new localStrategy(
     }));
 
 passport.use("login",
-    new localStrategy((username, password, done) => {
+    new localStrategy({passReqToCallback: true, usernameField: 'username', passwordField: 'password'},(req, username, password, done) => {
         mongoose.connect(process.env.DB_MONGO);
         try{
             UserModel.findOne({username},(err, user)=>{
@@ -58,3 +65,19 @@ passport.use("login",
 
 
 
+passport.serializeUser((usuario, done) => {
+	console.log(usuario);
+	done(null, usuario._id);
+});
+
+passport.deserializeUser((id, done) => {
+	UserModel.findById(id, done);
+});
+
+function createHash(password){
+    return bCrypt.hashSync(password, bCrypt.genSaltSync(10),null)
+}
+
+function isValidPassword(user, password) {
+    return bCrypt.compareSync(password, user.password)
+}

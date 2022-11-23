@@ -9,8 +9,12 @@ import Container from "./../../DAOs/connectionMongo.js"
 import passport from "passport";
 
 
+
+
 const products = new Container();
 const router = express.Router();
+
+router.use(passport.initialize());
 
 router.use(session({ 
     //store: MongoStore.create({ mongoUrl: config.mongoLocal.cxnStr }),
@@ -33,6 +37,13 @@ router.get('/home', webAuth, (req, res) => {
     res.render(path.join(process.cwd(), '/views/home.ejs'),{username}) 
 })
 
+router.get('/register', (req,res)=>{
+    res.sendFile(path.join(process.cwd(), '/views/partials/register.html'))
+})
+
+router.get('/userData', (req, res) =>{
+    res.json({message: 'User logged in'})
+})
 
 router.get('/login', (req, res) => {
     const username = req.session?.username
@@ -41,6 +52,10 @@ router.get('/login', (req, res) => {
     } else {
         res.sendFile(path.join(process.cwd(), '/views/partials/login.html'))
     }
+})
+
+router.get("/login-error", (req, res) =>{
+    res.sendFile(path.join(process.cwd(), '/views/partials/login-error.html'))
 })
 
 router.get('/logout', (req, res) => {
@@ -64,15 +79,26 @@ router.post("/home", (req, res) => {
 	res.redirect("/home");
 });
 
-router.post('/login', (req, res) => {
+router.post(//ok
+	"/register",
+	passport.authenticate("register", {
+		successRedirect: "views/partials/login",
+		failureRedirect: "views/partials/login-error",
+        failureFlash: true
+	})
+);
+
+router.post('/login', 
     passport.authenticate("login",{
-        successRedirect: "/datos",
-        failureRedirect: "/login-error"
-    })
+        successRedirect: "views/partials/datos",
+        failureRedirect: "views/partials/login-error"
+    }), function (req, res){
+        res.render('home', {username: req.body.username})
+    }
     //req.session.username = req.body.username
 
     //res.redirect('/home')
-})
+)
 
 router.get("/api/productos-test", (req, res) => {
     let response = [];

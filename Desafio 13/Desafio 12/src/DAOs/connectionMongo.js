@@ -1,6 +1,6 @@
 import { connect } from "mongoose";
 import ProductModel from "../models/productsModel.js";
-require('dotenv').config()
+import "dotenv/config.js"
 
 
 class ConnectionMongo {

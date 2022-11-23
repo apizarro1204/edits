@@ -36,12 +36,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //estrategias
-passport.use(
+passport.use( //ok
 	"register",
 	new localStrategy(
 		{ passReqToCallback: true },
 		async (req, username, password, done) => {
-			console.log("Potopeo", username + password);
+			console.log("Registred", username + password);
 			mongoose.connect(
 				"mongodb+srv://Apizarro:darbeta12@cluster0.ho8uwm4.mongodb.net/?retryWrites=true&w=majority"
 			);
@@ -68,7 +68,7 @@ passport.use(
 	)
 );
 
-passport.use(
+passport.use( //ok
 	"login",
 	new localStrategy((username, password, done) => {
 		mongoose.connect(
@@ -137,10 +137,10 @@ app.engine(
 app.set("view engine", ".hbs");
 //rutas
 app.get("/login", (req, res) => {
-	res.render("login");
+	res.render("login");//ok
 });
 
-app.post(
+app.post(//ok
 	"/login",
 	passport.authenticate("login", {
 		successRedirect: "/datos",
@@ -149,18 +149,18 @@ app.post(
 );
 
 app.get("/login-error", (req, res) => {
-	res.render("login-error");
+	res.render("login-error"); //ok
 });
 
 app.get("/registrar", (req, res) => {
-	res.render("register");
+	res.render("register"); //ok
 });
 
-app.get("/datos", (req, res) => {
+app.get("/datos", (req, res) => { //ok
 	res.json({mensaje: 'sesion iniciada'});
 });
 
-app.post(
+app.post(//ok
 	"/registrar",
 	passport.authenticate("register", {
 		successRedirect: "/login",
