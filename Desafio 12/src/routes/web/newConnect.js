@@ -4,19 +4,26 @@ import path from 'path'
 import MongoStore from 'connect-mongo'
 import config from '../../../connection.js';
 import { webAuth } from "../../auth/index.js";
+import { faker } from "@faker-js/faker";
+import Container from "./../../DAOs/connectionMongo.js"
+import passport from "./../../config/passportConfig.js";
 
 
 
+
+const products = new Container();
 const router = express.Router();
 
-router.use(session({ // definir conexión mongoStore
+router.use(passport.initialize());
+
+router.use(session({ 
     //store: MongoStore.create({ mongoUrl: config.mongoLocal.cxnStr }),
-    secret: 'a',
+    secret: 'TOP SECRET',
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: config.mongoRemote.cxnStr }),
     cookie: {
-        maxAge: 60000
+        maxAge: 600000
     }
 }))
 
@@ -25,11 +32,19 @@ router.get('/', (req, res) => {
     res.redirect('/login')
 })
 
-router.get('/home', webAuth, (req, res) => {
-    const username = req.session?.username
+router.get('/home',(req, res) => {
+    const username = req.session?.passport.user
+    console.log(req.session);
     res.render(path.join(process.cwd(), '/views/home.ejs'),{username}) 
 })
 
+router.get('/register', (req,res)=>{
+    res.sendFile(path.join(process.cwd(), '/views/partials/register.html'))
+})
+
+router.get('/userData', (req, res) =>{
+    res.json({message: 'User logged in'})
+})
 
 router.get('/login', (req, res) => {
     const username = req.session?.username
@@ -40,8 +55,12 @@ router.get('/login', (req, res) => {
     }
 })
 
+router.get("/login-error", (req, res) =>{
+    res.sendFile(path.join(process.cwd(), '/views/partials/login-error.html'))
+})
+
 router.get('/logout', (req, res) => {
-    const username = req.session?.username
+    const username = req.session?.passport.user
     if (username) {
         req.session.destroy(err => {
             if (!err) {
@@ -55,13 +74,44 @@ router.get('/logout', (req, res) => {
     }
 });
 
-router.post('/login', (req, res) => {
-    console.log(req.session)
-    console.log(req.body)
+router.post("/home", (req, res) => {
+	const product = req.body;
+	products.put(product);
+	res.redirect("/home");
+});
 
-    req.session.username = req.body.username
+router.post(//ok
+	"/register",
+	passport.authenticate("register", {
+		successRedirect: "/login",
+		failureRedirect: "/login-error",
+        failureFlash: true
+	})
+);
 
-    res.redirect('/home')
+router.post('/login', 
+    passport.authenticate("login",{
+        successRedirect: "/home",
+        failureRedirect: "/login-error"
+    }), function (req, res){
+        res.render('home', {username: req.body.username})
+    }
+    //req.session.username = req.body.username
+
+    //res.redirect('/home')
+)
+
+router.get("/api/productos-test", (req, res) => {
+    let response = [];
+    for (let index = 0; index <= 5; index++) {
+        response.push({
+            title: faker.commerce.product(),
+            price: faker.commerce.price(),
+            thumbnail: faker.image.image()
+        });
+    }
+
+    res.render('test.ejs', { response: response })
 })
 
 export default router;

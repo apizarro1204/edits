@@ -1,7 +1,6 @@
-import Container from '../../../DAOs//connectionMongo.js'
-import Message from '../../../DAOs/connectionSQL.js'
+import Container from '../../DAOs/connectionMongo.js'
+import Message from '../../DAOs/connectionSQL.js'
 import config from '../../../connection.js'
-
 let prod = new Container("productos", config.mysql);
 let msg = new Message("mensajes", config.sqlite3)
 
